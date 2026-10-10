@@ -1,13 +1,14 @@
 require("dotenv").config();
 const express = require("express");
-
-const IS_PROD = process.env.NODE_ENV != 'dev' ? true : false;
+const { connectDB } = require("./config/config");
 const PORT = process.env.PORT;
 
 const app = express();
 
+//connexion a la base de donnee 
+connectDB();
+
 // ajout des routes a l'application vers la route principale /api
-app.use("/api", routes);
 
 app.listen(PORT, (error) => {
     if (error) {

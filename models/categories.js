@@ -1,0 +1,51 @@
+const Sequelize = require('sequelize');
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('categories', {
+    id: {
+      autoIncrement: true,
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true
+    },
+    category_name: {
+      type: DataTypes.STRING(150),
+      allowNull: false,
+      unique: "unq_categories_name"
+    },
+    category_desc: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    category_image_preview: {
+      type: DataTypes.STRING(500),
+      allowNull: false
+    },
+    category_created_date: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+      defaultValue: Sequelize.Sequelize.fn('curdate')
+    }
+  }, {
+    sequelize,
+    tableName: 'categories',
+    timestamps: false,
+    indexes: [
+      {
+        name: "PRIMARY",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "id" },
+        ]
+      },
+      {
+        name: "unq_categories_name",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "category_name" },
+        ]
+      },
+    ]
+  });
+};
