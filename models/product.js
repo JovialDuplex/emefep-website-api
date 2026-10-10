@@ -48,7 +48,7 @@ module.exports = function(sequelize, DataTypes) {
     product_created_date: {
       type: DataTypes.DATEONLY,
       allowNull: false,
-      defaultValue: Sequelize.Sequelize.fn('curdate')
+      defaultValue: () => new Date().toISOString().split('T')[0]
     }
   }, {
     sequelize,

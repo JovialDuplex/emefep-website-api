@@ -1,5 +1,5 @@
 const { dbConnector } = require("../config/config");
-
+const { Sequelize } = require("sequelize");
 var DataTypes = Sequelize.DataTypes;
 var _categories = require("./categories");
 var _company_infos = require("./company_infos");
@@ -10,10 +10,15 @@ var _projects = require("./projects");
 var _service = require("./service");
 var _users = require("./users");
 
+/**
+ * Initialise les modeles de la base de donnee 
+ * @param {Sequelize} sequelize 
+ * @returns 
+ */
 function initModels(sequelize) {
   var Category = _categories(sequelize, DataTypes);
-  var Company_info = _company_infos(sequelize, DataTypes);
-  var Company_stat = _company_stats(sequelize, DataTypes);
+  var CompanyInfo = _company_infos(sequelize, DataTypes);
+  var CompanyStat = _company_stats(sequelize, DataTypes);
   var Member = _members(sequelize, DataTypes);
   var Product = _product(sequelize, DataTypes);
   var Project = _projects(sequelize, DataTypes);
@@ -31,8 +36,8 @@ function initModels(sequelize) {
 
   return {
     Category,
-    Company_info,
-    Company_stat,
+    CompanyInfo,
+    CompanyStat,
     Member,
     Product,
     Project,

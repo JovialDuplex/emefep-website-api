@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('categories', {
     id: {
       autoIncrement: true,
@@ -23,7 +23,7 @@ module.exports = function(sequelize, DataTypes) {
     category_created_date: {
       type: DataTypes.DATEONLY,
       allowNull: false,
-      defaultValue: Sequelize.Sequelize.fn('curdate')
+      defaultValue: () => new Date().toISOString().split('T')[0]
     }
   }, {
     sequelize,

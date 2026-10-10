@@ -28,7 +28,7 @@ module.exports = function(sequelize, DataTypes) {
     user_date_register: {
       type: DataTypes.DATEONLY,
       allowNull: false,
-      defaultValue: Sequelize.Sequelize.fn('curdate')
+      defaultValue: () => new Date().toISOString().split('T')[0]
     },
     user_role: {
       type: DataTypes.ENUM('admin','client'),
