@@ -60,4 +60,20 @@ const syncDB = async function (mode = "false") {
     }
 };
 
-module.exports = { connectDB, syncDB, dbConnector };
+/**
+ * 
+ * @param {import('express').Application} app 
+ * @param {import('express').Express} express_instance 
+ */
+const configApp = function (app, express_instance) {
+    app.use(express_instance.json());
+    app.use(express_instance.urlencoded({ extended: true }));
+
+    //afficher les informations sur la requete effectuer 
+    app.use((request, _, next) => {
+        console.log(`${request.method} : < ${request.url} > at ${new Date().toLocaleDateString()} :${new Date().toLocaleTimeString()}`);
+        next();
+    })
+};
+
+module.exports = { configApp, connectDB, syncDB, dbConnector };
