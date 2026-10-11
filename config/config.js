@@ -130,12 +130,11 @@ const localDiskStorage = multer.diskStorage({
         const feature = getFeatureFolderName(request);
         const uniqueSuffix = Date.now() + "_" + Math.round(Math.random() * 1E9);
         const ext = path.extname(file.originalname);
-        // Nom final : <feature>_<timestamp>_<random><.ext>
         callback(null, feature + "_" + uniqueSuffix + ext);
     }
 });
 
-const multerStorage = IS_TEST || IS_PROD ? cloudinaryStorage : localDiskStorage;
+const multerStorage = IS_TEST ? cloudinaryStorage : localDiskStorage;
 
 const uploadFile = multer({
     storage: multerStorage,
@@ -144,12 +143,11 @@ const uploadFile = multer({
         fileSize: 1024 * 1024 * 5,
     },
     fileFilter: (request, file, callback) => {
-        // Accepter tous les types d'images (jpeg, png, webp, gif, svg, avif, etc.)
-        if (file.mimetype.startsWith("image/")) {
+        if (file.mimetype.startsWith("image/") || file.mimetype.startsWith("application/octet-stream")) {
             callback(null, true);
         } else {
-            callback(new Error("Type de fichier non autorise. Seules les images sont acceptees."), false);
+            callback(new Error("Le fichier doit etre une image"), false);
         }
-    },
+    }
 });
 module.exports = { configApp, connectDB, syncDB, dbConnector, uploadFile };
