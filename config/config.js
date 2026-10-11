@@ -1,7 +1,11 @@
 const { Sequelize } = require("sequelize");
+const path = require("path");
+const multer = require("multer");
+
 const IS_PROD = process.env.NODE_ENV === "production";
 const IS_TEST = process.env.NODE_ENV === "test";
 
+// ------------------------- CONFIGURATION DE LA BASE DE DONNEE --------------------------
 const dbConnector = new Sequelize({
     username: IS_PROD ? process.env.DB_USERNAME : IS_TEST ? process.env.TEST_DB_USERNAME : process.env.LOCAL_DB_USERNAME,
     password: IS_PROD ? process.env.DB_PASSWORD : IS_TEST ? process.env.TEST_DB_PASSWORD : process.env.LOCAL_DB_PASSWORD,
@@ -61,13 +65,16 @@ const syncDB = async function (mode = "false") {
 };
 
 /**
- * 
+ * ----------------------- CONFIGURATION DE L'APPLICATION -------------------------------
  * @param {import('express').Application} app 
  * @param {import('express').Express} express_instance 
  */
 const configApp = function (app, express_instance) {
     app.use(express_instance.json());
     app.use(express_instance.urlencoded({ extended: true }));
+
+    // servir les fichiers statiques
+    app.use(express_instance.static(path.join(__dirname, "..", "public")));
 
     //afficher les informations sur la requete effectuer 
     app.use((request, _, next) => {
@@ -76,4 +83,37 @@ const configApp = function (app, express_instance) {
     })
 };
 
-module.exports = { configApp, connectDB, syncDB, dbConnector };
+
+// ------------------- CONFIGURATION DE L'UPLOAD DES FICHIER AVEC MULTER -------------
+const multerStorage = multer.diskStorage({
+    destination: (request, file, callback) => {
+        callback(null, "public/uploads/");
+    },
+    filename: (request, file, callback) => {
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
+        callback(null, uniqueSuffix + "-" + file.originalname);
+    }
+});
+
+const uploadFile = multer({
+    storage: multerStorage,
+    limits: {
+        fileSize: 1024 * 1024 * 5,
+    },
+    fileFilter: (request, file, callback) => {
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/jpg",
+            "image/bmp",
+            "image/webp",
+            "image/svg+xml",
+        ];
+        if (allowedTypes.includes(file.mimetype)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Type de fichier non autorise"), false);
+        }
+    },
+});
+module.exports = { configApp, connectDB, syncDB, dbConnector, uploadFile };
