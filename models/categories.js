@@ -10,7 +10,11 @@ module.exports = function (sequelize, DataTypes) {
     category_name: {
       type: DataTypes.STRING(150),
       allowNull: false,
-      unique: "unq_categories_name"
+    },
+    category_slug: {
+      type: DataTypes.STRING(200),
+      allowNull: false,
+      unique: "unq_categories_slug"
     },
     category_desc: {
       type: DataTypes.TEXT,
@@ -39,11 +43,11 @@ module.exports = function (sequelize, DataTypes) {
         ]
       },
       {
-        name: "unq_categories_name",
+        name: "unq_categories_slug",
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "category_name" },
+          { name: "category_slug" },
         ]
       },
     ]

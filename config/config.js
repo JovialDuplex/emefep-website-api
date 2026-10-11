@@ -1,6 +1,9 @@
 const { Sequelize } = require("sequelize");
-const path = require("path");
 const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const { v2: cloudinary } = require("cloudinary");
 
 const IS_PROD = process.env.NODE_ENV === "production";
 const IS_TEST = process.env.NODE_ENV === "test";
@@ -85,34 +88,67 @@ const configApp = function (app, express_instance) {
 
 
 // ------------------- CONFIGURATION DE L'UPLOAD DES FICHIER AVEC MULTER -------------
-const multerStorage = multer.diskStorage({
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+// Extrait le nom de la feature depuis l'URL : /api/<feature>/action → "feature"
+const getFeatureFolderName = (req) => req.originalUrl.split("/").filter(Boolean)[1] || "uploads";
+
+// ---- Stockage CLOUDINARY (environnement TEST / PRODUCTION) ----
+const cloudinaryStorage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: (req, file) => {
+        const folder_name = getFeatureFolderName(req);
+        const unique_id = folder_name + "_" + Date.now() + "_" + Math.round(Math.random() * 1E9);
+        return {
+            folder: "emefep/" + folder_name,
+            public_id: unique_id,
+            // Pas de transformation de format : on garde le format original
+            resource_type: "auto",
+        };
+    },
+});
+
+// ---- Stockage LOCAL sur disque (environnement DEVELOPPEMENT) ----
+const localDiskStorage = multer.diskStorage({
     destination: (request, file, callback) => {
-        callback(null, "public/uploads/");
+        const folder_name = getFeatureFolderName(request);
+        const uploadPath = path.join(__dirname, "..", "public", "uploads", folder_name);
+
+        // Crée le dossier de la feature si il n'existe pas encore
+        if (!fs.existsSync(uploadPath)) {
+            fs.mkdirSync(uploadPath, { recursive: true });
+        }
+
+        callback(null, uploadPath);
     },
     filename: (request, file, callback) => {
-        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
-        callback(null, uniqueSuffix + "-" + file.originalname);
+        const feature = getFeatureFolderName(request);
+        const uniqueSuffix = Date.now() + "_" + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname);
+        // Nom final : <feature>_<timestamp>_<random><.ext>
+        callback(null, feature + "_" + uniqueSuffix + ext);
     }
 });
+
+const multerStorage = IS_TEST || IS_PROD ? cloudinaryStorage : localDiskStorage;
 
 const uploadFile = multer({
     storage: multerStorage,
     limits: {
+        // Taille maximale du fichier : 5 Mo
         fileSize: 1024 * 1024 * 5,
     },
     fileFilter: (request, file, callback) => {
-        const allowedTypes = [
-            "image/jpeg",
-            "image/png",
-            "image/jpg",
-            "image/bmp",
-            "image/webp",
-            "image/svg+xml",
-        ];
-        if (allowedTypes.includes(file.mimetype)) {
+        // Accepter tous les types d'images (jpeg, png, webp, gif, svg, avif, etc.)
+        if (file.mimetype.startsWith("image/")) {
             callback(null, true);
         } else {
-            callback(new Error("Type de fichier non autorise"), false);
+            callback(new Error("Type de fichier non autorise. Seules les images sont acceptees."), false);
         }
     },
 });

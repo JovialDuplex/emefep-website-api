@@ -10,11 +10,12 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "cloudinary": "^2.11.0",
+    "cloudinary": "^1.41.3",
     "dotenv": "^18.0.4",
     "express": "^5.2.1",
     "joi": "^18.2.9",
     "multer": "^2.4.0",
+    "multer-storage-cloudinary": "^4.0.0",
     "mysql2": "^3.24.5",
     "sequelize": "^6.37.8",
     "sequelize-auto": "^0.8.8"

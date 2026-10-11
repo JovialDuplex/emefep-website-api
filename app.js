@@ -15,7 +15,7 @@ const start = async () => {
     require("./models/init-models");
 
     // Synchronisation / migration automatique des tables
-    await syncDB();
+    await syncDB("alter");
 
     // ajout de la configuration de l'app 
     configApp(app, express);
