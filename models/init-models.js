@@ -1,5 +1,7 @@
 const { dbConnector } = require("../config/config");
 const { Sequelize } = require("sequelize");
+const { deleteUploadedFile } = require("../utils/deleteUploadedFile");
+
 var DataTypes = Sequelize.DataTypes;
 var _categories = require("./categories");
 var _company_infos = require("./company_infos");
@@ -33,6 +35,12 @@ function initModels(sequelize) {
   Category.hasMany(Project, { as: "projects", foreignKey: "project_category" });
   Service.belongsTo(Category, { as: "service_category_category", foreignKey: "service_category" });
   Category.hasMany(Service, { as: "services", foreignKey: "service_category" });
+
+  // Hook : apres la suppression d'une categorie, on supprime l'image associee
+  // Compatible LOCAL (disque) et TEST/PROD (Cloudinary)
+  Category.afterDestroy(async (category) => {
+    await deleteUploadedFile(category.category_image_preview);
+  });
 
   return {
     Category,
