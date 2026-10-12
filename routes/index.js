@@ -2,6 +2,7 @@ import { Router } from "express";
 import categoryRouter from "./categoryRoutes.js";
 import statRouter from "./statRoutes.js";
 import memberRouter from "./memberRoutes.js";
+import serviceRouter from "./serviceRoutes.js";
 
 const mainRouter = Router();
 
@@ -9,7 +10,7 @@ const mainRouter = Router();
 mainRouter.use("/category", categoryRouter);
 mainRouter.use("/stat", statRouter);
 mainRouter.use("/member", memberRouter);
-
+mainRouter.use("/service", serviceRouter);
 
 //donne les informations sur l'api 
 mainRouter.get("/", (request, response) => {
