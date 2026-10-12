@@ -23,7 +23,14 @@ const apiResponseError = function(response, message, status, error){
  * @param {any} data
  */
 const apiResponse = function(response, message, status, data){
-    console.log(message);
+    
+    console.log(`
+        {
+            message : ${message},
+            status: ${status},
+            data: ${data},
+        }
+    `);
     
     response.status(status).json({
         message,

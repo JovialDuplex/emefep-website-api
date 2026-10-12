@@ -1,11 +1,11 @@
 import {Router} from "express";
-import { createService, deleteService, getService, updateService } from "../controllers/serviceController";
-
+import serviceController from "../controllers/serviceController.js";
+import { uploadFile } from "../config/config.js";
 const serviceRouter = Router();
 
-serviceRouter.post("/create", createService);
-serviceRouter.get("/", getService);
-serviceRouter.patch("/update", updateService);
-serviceRouter.delete("/delete", deleteService);
+serviceRouter.post("/create", uploadFile.single("service_image"), serviceController.createService);
+serviceRouter.get("/", serviceController.getService);
+serviceRouter.patch("/update", uploadFile.single("service_image"), serviceController.updateService);
+serviceRouter.delete("/delete", serviceController.deleteService);
 
 export default serviceRouter;

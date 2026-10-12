@@ -36,6 +36,17 @@ function initModels(sequelize) {
   Service.belongsTo(Category, { as: "service_category_category", foreignKey: "service_category" });
   Category.hasMany(Service, { as: "services", foreignKey: "service_category" });
 
+  
+  Service.afterDestroy(async (service)=>{
+    await deleteUploadedFile(service.service_image);
+  });
+  
+  Service.beforeUpdate(async (service)=>{
+    if(service.changed("service_image")) {
+      await deleteUploadedFile(service._previousDataValues.service_image);
+    }
+  });
+
   //supprime l'image si un  membre est supprime
   Member.afterDestroy(async (member) => {
     await deleteUploadedFile(member.member_image)

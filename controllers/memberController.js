@@ -57,7 +57,7 @@ const addMember = async (request, response) => {
 
         //url de l'image pour la production n'a pas encore definie 
         const image_url = IS_TEST ? request.file.path : IS_DEV ? `/uploads/member/${request.file.filename}` : null;
-
+        
         const member = await Member.create({
             ...data,
             member_image: image_url,
