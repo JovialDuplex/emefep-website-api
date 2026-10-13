@@ -1,8 +1,11 @@
 const categoryRoutes = require("./categoryRoutes");
+const statRoutes = require("./statRoutes");
+
 const router = require("express").Router();
 
 //ajout des routes pour les categories a la route principale 
 router.use("/category", categoryRoutes);
+router.use("/stat", statRoutes);
 
 //donne les informations sur l'api 
 router.get("/", (request, response) => {

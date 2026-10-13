@@ -130,7 +130,6 @@ const updateCategory = async function (request, response) {
 
         if (category_name !== undefined) {
             category.category_name = category_name;
-            // Le hook beforeUpdate recalculera automatiquement category_slug
         }
 
         if (category_desc !== undefined) {
