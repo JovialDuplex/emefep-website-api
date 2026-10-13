@@ -89,12 +89,81 @@ const deleteCategory = async function (request, response) {
 
 /**
  * @description modifie une category
- * PUT /api/categories?id=<id_category>
+ * PATCH /api/categories/update?id=<id_category>
+ *
+ * Principe : on recupere l'instance via findOne() puis on appelle instance.save().
+ * Contrairement a Category.update() (methode statique), instance.save() declenche
+ * les hooks Sequelize :
+ *   - beforeUpdate → recalcule automatiquement le slug si category_name change
+ *   - afterUpdate  → supprime l'ancienne image si category_image_preview change
+ *
  * @param {import('express').Request} request 
  * @param {import('express').Response} response 
  */
-const updateCategory = function (request, response) {
-    response.send("modification de la category");
+const updateCategory = async function (request, response) {
+    try {
+        const { id } = request.query;
+
+        // 1. Verifier que l'identifiant est fourni
+        if (!id) {
+            return response.status(400).json({
+                message: "L'identifiant de la category est requis pour la mise a jour",
+                status: 400,
+            });
+        }
+
+        // 2. Recuperer l'instance de la category en base de donnees
+        const category = await Category.findOne({ where: { id } });
+
+        if (!category) {
+            return response.status(404).json({
+                message: "La category n'a pas ete trouve",
+                status: 404,
+            });
+        }
+
+        const IS_CLOUD = process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'production';
+
+        // 3. Appliquer les modifications sur l'instance
+        //    Sequelize tracke les champs modifies via category.changed()
+        const { category_name, category_desc } = request.body;
+
+        if (category_name !== undefined) {
+            category.category_name = category_name;
+            // Le hook beforeUpdate recalculera automatiquement category_slug
+        }
+
+        if (category_desc !== undefined) {
+            category.category_desc = category_desc;
+        }
+
+        // 4. Si une nouvelle image est uploadee, mettre a jour le chemin
+        //    Le hook afterUpdate supprimera automatiquement l'ancienne image
+        if (request.file) {
+            category.category_image_preview = IS_CLOUD
+                ? request.file.path
+                : `uploads/category/${request.file.filename}`;
+        }
+
+        // 5. Sauvegarder → declenche beforeUpdate puis afterUpdate
+        await category.save();
+
+        console.log(`[updateCategory] Category #${id} mise a jour avec succes`);
+
+        return response.status(200).json({
+            message: "Category mise a jour avec succes",
+            status: 200,
+            category
+        });
+
+    } catch (error) {
+        console.error("Erreur serveur lors de la mise a jour de la category :", error);
+        return response.status(500).json({
+            message: "Erreur serveur lors de la mise a jour de la category",
+            status: 500,
+            error: error.message
+        });
+    }
 }
 
 /**

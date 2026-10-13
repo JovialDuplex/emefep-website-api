@@ -36,11 +36,32 @@ function initModels(sequelize) {
   Service.belongsTo(Category, { as: "service_category_category", foreignKey: "service_category" });
   Category.hasMany(Service, { as: "services", foreignKey: "service_category" });
 
-  // Hook : apres la suppression d'une categorie, on supprime l'image associee
-  // Compatible LOCAL (disque) et TEST/PROD (Cloudinary)
+  //supprime une image si la category est supprimer 
   Category.afterDestroy(async (category) => {
     await deleteUploadedFile(category.category_image_preview);
   });
+
+  //modifier le slug de la category avant de l'envoyer dans la base de donnee
+  Category.beforeUpdate(async (category) => {
+    if (category.changed('category_name')) {
+      console.log("category_name has been changed");
+      category.category_slug = "@" + category.category_name.toLowerCase().replace(/\s+/g, "-");
+    }
+  });
+
+  // Si l'image de la category change, on supprime l'ANCIENNE image apres la mise a jour.
+  // On utilise _previousDataValues pour acceder a la valeur AVANT modification,
+  // car apres le save(), category_image_preview contient deja la nouvelle valeur.
+  Category.afterUpdate(async (category) => {
+    if (category.changed('category_image_preview')) {
+      const oldImage = category._previousDataValues.category_image_preview;
+      console.log(`[Hook afterUpdate] Suppression de l'ancienne image : ${oldImage}`);
+      await deleteUploadedFile(oldImage);
+    }
+  });
+
+
+
 
   return {
     Category,
