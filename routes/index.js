@@ -6,6 +6,7 @@ const router = require("express").Router();
 //ajout des routes pour les categories a la route principale 
 router.use("/category", categoryRoutes);
 router.use("/stat", statRoutes);
+router.use("/company-infos", companyRoutes);
 
 //donne les informations sur l'api 
 router.get("/", (request, response) => {
