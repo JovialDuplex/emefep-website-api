@@ -63,4 +63,4 @@ async function deleteUploadedFile(imageValue) {
     }
 }
 
-module.exports = { deleteUploadedFile };
+exports = { deleteUploadedFile };

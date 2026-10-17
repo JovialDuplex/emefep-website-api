@@ -1,5 +1,11 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+/**
+ * 
+ * @param {Sequelize} sequelize 
+ * @param {Sequelize.DataTypes} DataTypes 
+ * @returns 
+ */
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('members', {
     id: {
       autoIncrement: true,

@@ -167,7 +167,7 @@ const updateCategory = async function (request, response) {
 
 /**
  * @description cree une category
- * POST /api/categories
+ * POST /api/categories/create
  * @param {import('express').Request} request 
  * @param {import('express').Response} response 
  */
