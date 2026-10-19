@@ -1,13 +1,12 @@
-const router = require("express").Router();
-const statController = require("../controllers/statController");
-const statValidation = require("../middlewares/statValidation");
+import { Router } from "express";
+import statController from "../controllers/statController.js";
+import statValidation from "../middlewares/statValidation.js";
 
-router.post("/create", statValidation.createStatValidate, statController.createStat);
+const statRouter = Router();
 
-router.get("/", statController.getAllStat);
+statRouter.post("/create", statValidation.createStatValidate, statController.createStat);
+statRouter.get("/", statController.getAllStat);
+statRouter.patch("/update", statValidation.updateStatValidate, statController.updateStat);
+statRouter.delete("/delete", statController.deleteStat);
 
-router.patch("/update", statValidation.updateStatValidate, statController.updateStat);
-
-router.delete("/delete", statController.deleteStat);
-
-module.exports = router;
+export default statRouter;

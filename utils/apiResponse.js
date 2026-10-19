@@ -33,7 +33,7 @@ const apiResponse = function(response, message, status, data){
 
 };
 
-module.exports = {
+export {
     apiResponse,
     apiResponseError
-}
+};

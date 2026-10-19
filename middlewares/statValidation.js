@@ -1,4 +1,4 @@
-const joi = require('joi');
+import joi from 'joi';
 
 const createStatValidationSchema = joi.object({
     stat_label: joi.string().max(150).required().messages({
@@ -19,6 +19,7 @@ const updateStatValidationSchema = joi.object({
         'string.max': 'La valeur ne doit pas depasser 16 caracteres',
     }),
 });
+
 /**
  * @description middleware de validation des donnees de la statistique 
  * @param {import("express").Request} request 
@@ -89,7 +90,7 @@ const updateStatValidate = function (request, response, next) {
 };
 
 
-module.exports = {
+export default {
     createStatValidate,
     updateStatValidate,
-}
+};

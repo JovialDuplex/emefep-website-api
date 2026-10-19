@@ -1,4 +1,4 @@
-const { CompanyStat } = require("../models/init-models");
+import { CompanyStat } from "../models/init-models.js";
 
 /**
  * @description Function de creation d'une statistique 
@@ -130,9 +130,9 @@ const deleteStat = async function (request, response) {
 };
 
 
-module.exports = {
+export default {
     createStat,
     getAllStat,
     updateStat,
     deleteStat,
-}
+};

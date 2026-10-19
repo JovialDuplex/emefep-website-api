@@ -4,7 +4,7 @@
   "description": "ce projet contient la version 1 de l'api utilise pour le site web de l'entreprise Multiservice EMEFEP",
   "license": "ISC",
   "author": "Jovial Duplex",
-  "type": "commonjs",
+  "type": "module",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

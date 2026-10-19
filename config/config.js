@@ -1,9 +1,14 @@
-const { Sequelize } = require("sequelize");
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
-const { v2: cloudinary } = require("cloudinary");
+import { Sequelize } from "sequelize";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import { v2 as cloudinary } from "cloudinary";
+
+// Equivalent de __dirname en ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const IS_PROD = process.env.NODE_ENV === "production";
 const IS_TEST = process.env.NODE_ENV === "test";
@@ -150,4 +155,5 @@ const uploadFile = multer({
         }
     }
 });
-module.exports = { configApp, connectDB, syncDB, dbConnector, uploadFile };
+
+export { configApp, connectDB, syncDB, dbConnector, uploadFile };

@@ -1,17 +1,18 @@
-const categoryRoutes = require("./categoryRoutes");
-const statRoutes = require("./statRoutes");
-const memberRoutes = require("./memberRoutes");
+import { Router } from "express";
+import categoryRouter from "./categoryRoutes.js";
+import statRouter from "./statRoutes.js";
+import memberRouter from "./memberRoutes.js";
 
-const router = require("express").Router();
+const mainRouter = Router();
 
 //ajout des routes pour les categories a la route principale 
-router.use("/category", categoryRoutes);
-router.use("/stat", statRoutes);
-router.use("/member", memberRoutes);
+mainRouter.use("/category", categoryRouter);
+mainRouter.use("/stat", statRouter);
+mainRouter.use("/member", memberRouter);
 
 
 //donne les informations sur l'api 
-router.get("/", (request, response) => {
+mainRouter.get("/", (request, response) => {
     response.json({
         "api-name": "emefep-website-api",
         "version": "1.0.0",
@@ -21,7 +22,7 @@ router.get("/", (request, response) => {
 });
 
 //donner tous les endpoints de l'api 
-router.get("/endpoints", (request, response) => {
+mainRouter.get("/endpoints", (request, response) => {
     response.json({
         endpoints: [{
             endpoint: "/api/category",
@@ -43,4 +44,4 @@ router.get("/endpoints", (request, response) => {
     })
 });
 
-module.exports = router;
+export default mainRouter;

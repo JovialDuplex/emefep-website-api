@@ -1,11 +1,13 @@
-const router = require("express").Router();
-const categoryController = require("../controllers/categoryController");
-const categoryValidator = require("../middlewares/categoryValidation");
-const { uploadFile } = require("../config/config");
+import { Router } from "express";
+import categoryController from "../controllers/categoryController.js";
+import categoryValidator from "../middlewares/categoryValidation.js";
+import { uploadFile } from "../config/config.js";
 
-router.get("/", categoryController.getCategory);
-router.post("/create", uploadFile.single("category_image_preview"), categoryValidator.createCategoryValidation, categoryController.createCategory);
-router.patch("/update", uploadFile.single("category_image_preview"), categoryController.updateCategory);
-router.delete("/delete", categoryController.deleteCategory);
+const categoryRouter = Router();
 
-module.exports = router;
+categoryRouter.get("/", categoryController.getCategory);
+categoryRouter.post("/create", uploadFile.single("category_image_preview"), categoryValidator.createCategoryValidation, categoryController.createCategory);
+categoryRouter.patch("/update", uploadFile.single("category_image_preview"), categoryController.updateCategory);
+categoryRouter.delete("/delete", categoryController.deleteCategory);
+
+export default categoryRouter;

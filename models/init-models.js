@@ -1,16 +1,16 @@
-const { dbConnector } = require("../config/config");
-const { Sequelize } = require("sequelize");
-const { deleteUploadedFile } = require("../utils/deleteUploadedFile");
+import { dbConnector } from "../config/config.js";
+import { Sequelize } from "sequelize";
+import { deleteUploadedFile } from "../utils/deleteUploadedFile.js";
+import _categories from "./categories.js";
+import _company_infos from "./company_infos.js";
+import _company_stats from "./company_stats.js";
+import _members from "./members.js";
+import _product from "./product.js";
+import _projects from "./projects.js";
+import _service from "./service.js";
+import _users from "./users.js";
 
 var DataTypes = Sequelize.DataTypes;
-var _categories = require("./categories");
-var _company_infos = require("./company_infos");
-var _company_stats = require("./company_stats");
-var _members = require("./members");
-var _product = require("./product");
-var _projects = require("./projects");
-var _service = require("./service");
-var _users = require("./users");
 
 /**
  * Initialise les modeles de la base de donnee 
@@ -40,6 +40,13 @@ function initModels(sequelize) {
   Member.afterDestroy(async (member)=>{
     await deleteUploadedFile(member.member_image)
   });
+  
+  // lorsqu'on met a jour un membre si le photo est changer on supprime l'ancien
+  Member.afterDestroy(async (member)=>{
+    if(member.changed("member_image")){
+      console.log("l'image de profile a ete modifie ")
+    }
+  });
 
   //supprime une image si la category est supprimer 
   Category.afterDestroy(async (category) => {
@@ -49,7 +56,7 @@ function initModels(sequelize) {
   //modifier le slug de la category avant de l'envoyer dans la base de donnee
   Category.beforeUpdate(async (category) => {
     if (category.changed('category_name')) {
-      console.log("category_name has been changed");
+      console.log("l'image de la category a ete modifiee");
       category.category_slug = "@" + category.category_name.toLowerCase().replace(/\s+/g, "-");
     }
   });
@@ -82,4 +89,4 @@ function initModels(sequelize) {
 
 const models = initModels(dbConnector);
 
-module.exports = { ...models };
+export const { Category, CompanyInfo, CompanyStat, Member, Product, Project, Service, User } = models;

@@ -1,9 +1,12 @@
+import { Member } from "../models/init-models.js";
+import { apiResponse, apiResponseError } from "../utils/apiResponse.js";
 
-const { Member } = require("../models/init-models");
-const { apiResponse, apiResponseError } = require("../utils/apiResponse");
+const IS_TEST = process.env.NODE_ENV === 'test';
+const IS_DEV = process.env.NODE_ENV === 'development';
+
 
 /**
- * @description Recuperation de toutes les informations sur un membre ou tous  les membres 
+ * @description Recuperation de toutes les informations sur un membre ou tous  les membres -----------------------------------------------------------
  * GET : /api/member/
  * @param {import("express").Request} request
  * @param {import("express").Response} response
@@ -35,13 +38,29 @@ const getMember = async (request, response) => {
 };
 
 /**
- * @description Ajout d'un membre 
+ * @description Ajout d'un membre ---------------------------------------------------------------
  * POST : /api/member/add
  * @param {import("express").Request} request 
  * @param {import("express").Response} response 
  */
 const addMember = async (request, response) => {
     try {
+        const data = request.body;
+
+        //verifier si le membre existe deja 
+        const mymember = await Member.findOne({ where: { member_email: data.member_email } });
+        if (mymember) {
+            return apiResponse(response, "le membre existe deja ", 201);
+        }
+
+        //url de l'image pour la production n'a pas encore definie 
+        const image_url = IS_TEST ? request.file.path : IS_DEV ? `/uploads/member/${request.file.filename}` : null;
+
+        const member = await Member.create({
+            ...data,
+            member_image: image_url,
+        });
+        return apiResponse(response, "Le membre a ete ajouter avec success ! ", 200, member);
 
     } catch (error) {
         return apiResponseError(
@@ -54,7 +73,7 @@ const addMember = async (request, response) => {
 };
 
 /**
- * @description Mise a jour des informations d'un membre 
+ * @description Mise a jour des informations d'un membre-----------------------------------------
  * PUT : /api/member/update
  * @param {import("express").Request} request 
  * @param {import("express").Response} response 
@@ -64,7 +83,7 @@ const updateMember = (request, response) => {
 };
 
 /**
- * @description Suppression d'un membre 
+ * @description Suppression d'un membre-----------------------------------------------------------
  * DELETE : /api/member/remove?id=<id_member>
  * @param {import("express").Request} request 
  * @param {import("express").Response} response 
@@ -79,8 +98,8 @@ const removeMember = async (request, response) => {
         const member = await Member.findOne({ where: { id } });
         if (!member) {
             return apiResponse(
-                response, 
-                `le membre #${id} n'a pas ete retrouve`, 
+                response,
+                `le membre #${id} n'a pas ete retrouve`,
                 404
             );
         }
@@ -99,7 +118,7 @@ const removeMember = async (request, response) => {
     }
 };
 
-module.exports = {
+export default {
     getMember,
     addMember,
     updateMember,

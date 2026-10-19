@@ -1,18 +1,16 @@
-require("dotenv").config();
-const express = require("express");
-const { connectDB, syncDB, configApp } = require("./config/config");
-const PORT = process.env.PORT;
-const appRoutes = require("./routes/index");
+import "dotenv/config";
+import express from "express";
+import { connectDB, syncDB, configApp } from "./config/config.js";
+import mainRouter from "./routes/index.js";
 
+const PORT = 3000;
 const app = express();
 
 // Demarrage de l'application : connexion DB → chargement des modeles → migration automatique
 const start = async () => {
     // Connexion a la base de donnee
-    await connectDB();
 
-    // Chargement de tous les modeles (ils s'enregistrent sur dbConnector)
-    require("./models/init-models");
+    await connectDB();
 
     // Synchronisation / migration automatique des tables
     await syncDB();
@@ -21,7 +19,7 @@ const start = async () => {
     configApp(app, express);
 
     // Ajout des routes de l'application
-    app.use("/api", appRoutes);
+    app.use("/api", mainRouter);
 
     // Lancement du serveur HTTP
     app.listen(PORT, (error) => {

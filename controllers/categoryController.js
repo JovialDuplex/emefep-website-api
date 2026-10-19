@@ -1,4 +1,4 @@
-const { Category } = require("../models/init-models");
+import { Category } from "../models/init-models.js";
 
 /**
  * @description recuperation des categories et d'une seule si l'identifiant est defini
@@ -175,14 +175,6 @@ const createCategory = async function (request, response) {
     try {
         const data = request.body;
 
-        // Vérification : l'image est obligatoire
-        if (!request.file) {
-            return response.status(400).json({
-                message: "L'image de la categorie est obligatoire",
-                status: 400,
-            });
-        }
-
         // Sur Cloudinary (TEST/PROD) : request.file.path contient l'URL Cloudinary
         // Sur disque local (DEV)    : on construit le chemin relatif accessible via /public
         const IS_CLOUD = process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'production';
@@ -214,9 +206,9 @@ const createCategory = async function (request, response) {
     }
 }
 
-module.exports = {
+export default {
     getCategory,
     deleteCategory,
     updateCategory,
     createCategory
-}
+};

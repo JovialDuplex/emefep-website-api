@@ -1,11 +1,12 @@
-const Sequelize = require('sequelize');
+import Sequelize from 'sequelize';
+
 /**
  * 
  * @param {Sequelize} sequelize 
  * @param {Sequelize.DataTypes} DataTypes 
  * @returns 
  */
-module.exports = function (sequelize, DataTypes) {
+export default function (sequelize, DataTypes) {
   return sequelize.define('members', {
     id: {
       autoIncrement: true,
