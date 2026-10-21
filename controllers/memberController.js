@@ -101,7 +101,12 @@ const updateMember = async (request, response) => {
             } : {}),
         }, { where: { id }, individualHooks: true });
 
-        if (!member) {
+        if (!member[0]) {
+            // si l'utilisateur n'a pas ete trouve on supprime l'image qui a ete uploader
+            if (request.file) {
+                await deleteMulterFile(request.file);
+            }
+
             return apiResponse(
                 response,
                 `le membre #${id} n'a pas ete retrouve`,
