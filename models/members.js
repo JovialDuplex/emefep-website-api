@@ -56,7 +56,7 @@ export default function (sequelize, DataTypes) {
   }, {
     sequelize,
     tableName: 'members',
-    timestamps: false,
+    timestamps: true,
     indexes: [
       {
         name: "PRIMARY",

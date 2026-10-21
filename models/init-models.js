@@ -37,14 +37,16 @@ function initModels(sequelize) {
   Category.hasMany(Service, { as: "services", foreignKey: "service_category" });
 
   //supprime l'image si un  membre est supprime
-  Member.afterDestroy(async (member)=>{
+  Member.afterDestroy(async (member) => {
     await deleteUploadedFile(member.member_image)
   });
-  
+
   // lorsqu'on met a jour un membre si le photo est changer on supprime l'ancien
-  Member.afterDestroy(async (member)=>{
-    if(member.changed("member_image")){
-      console.log("l'image de profile a ete modifie ")
+  Member.beforeUpdate(async (member) => {
+    if (member.changed("member_image")) {
+      const oldImage = member._previousDataValues.member_image;
+      console.log(`[Hook beforeUpdate] Suppression de l'ancienne image : ${oldImage}`);
+      await deleteUploadedFile(oldImage);
     }
   });
 
