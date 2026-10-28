@@ -26,7 +26,7 @@ export default function(sequelize, DataTypes) {
       comment: "description du produit"
     },
     product_category: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
       references: {
         model: 'categories',
@@ -46,11 +46,7 @@ export default function(sequelize, DataTypes) {
       type: DataTypes.STRING(500),
       allowNull: false
     },
-    product_created_date: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
-      defaultValue: () => new Date().toISOString().split('T')[0]
-    }
+
   }, {
     sequelize,
     tableName: 'product',

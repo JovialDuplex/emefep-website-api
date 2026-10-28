@@ -1,10 +1,16 @@
 import Sequelize from 'sequelize';
-
+/**
+ * 
+ * @param {Sequelize} sequelize 
+ * @param {import('sequelize').DataTypes} DataTypes 
+ * @returns 
+ */
 export default function(sequelize, DataTypes) {
+  
   return sequelize.define('service', {
     id: {
-      autoIncrement: true,
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
       comment: "identifiant du service"
@@ -25,19 +31,12 @@ export default function(sequelize, DataTypes) {
       comment: "image de presentation du service"
     },
     service_details: {
-      type: DataTypes.TEXT,
+      type: DataTypes.JSON,
       allowNull: true,
-      defaultValue: "json_object('intervention_time','2 jours')",
       comment: "details sur le service"
     },
-    service_created_date: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
-      defaultValue: () => new Date().toISOString().split('T')[0],
-      comment: "date de publication du service"
-    },
     service_category: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: true,
       references: {
         model: 'categories',
@@ -52,7 +51,7 @@ export default function(sequelize, DataTypes) {
   }, {
     sequelize,
     tableName: 'service',
-    timestamps: false,
+    timestamps: true,
     indexes: [
       {
         name: "PRIMARY",

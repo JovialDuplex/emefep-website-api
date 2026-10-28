@@ -9,8 +9,8 @@ import Sequelize from 'sequelize';
 export default function (sequelize, DataTypes) {
   return sequelize.define('members', {
     id: {
-      autoIncrement: true,
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
       comment: "identifiant du membre de l'entreprise"
@@ -37,7 +37,7 @@ export default function (sequelize, DataTypes) {
       allowNull: true
     },
     member_category: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
       references: {
         model: 'categories',

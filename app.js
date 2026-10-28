@@ -13,7 +13,7 @@ const start = async () => {
     await connectDB();
 
     // Synchronisation / migration automatique des tables
-    await syncDB();
+    await syncDB("force");
 
     // ajout de la configuration de l'app 
     configApp(app, express);

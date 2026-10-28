@@ -151,7 +151,7 @@ const uploadFile = multer({
         if (file.mimetype.startsWith("image/") || file.mimetype.startsWith("application/octet-stream")) {
             callback(null, true);
         } else {
-            callback(new Error("Le fichier doit etre une image"), false);
+            callback(null, false);
         }
     }
 });

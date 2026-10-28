@@ -3,8 +3,8 @@ import Sequelize from 'sequelize';
 export default function (sequelize, DataTypes) {
   return sequelize.define('categories', {
     id: {
-      autoIncrement: true,
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true
     },
@@ -25,15 +25,10 @@ export default function (sequelize, DataTypes) {
       type: DataTypes.STRING(500),
       allowNull: false
     },
-    category_created_date: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
-      defaultValue: () => new Date().toISOString().split('T')[0]
-    }
   }, {
     sequelize,
     tableName: 'categories',
-    timestamps: false,
+    timestamps: true,
     indexes: [
       {
         name: "PRIMARY",

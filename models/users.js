@@ -3,10 +3,10 @@ import Sequelize from 'sequelize';
 export default function(sequelize, DataTypes) {
   return sequelize.define('users', {
     id: {
-      autoIncrement: true,
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
     },
     user_full_name: {
       type: DataTypes.STRING(200),
@@ -26,11 +26,6 @@ export default function(sequelize, DataTypes) {
       allowNull: false,
       unique: "unq_users_email"
     },
-    user_date_register: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
-      defaultValue: () => new Date().toISOString().split('T')[0]
-    },
     user_role: {
       type: DataTypes.ENUM('admin','client'),
       allowNull: false,
@@ -49,7 +44,7 @@ export default function(sequelize, DataTypes) {
   }, {
     sequelize,
     tableName: 'users',
-    timestamps: false,
+    timestamps: true,
     indexes: [
       {
         name: "PRIMARY",
@@ -77,7 +72,7 @@ export default function(sequelize, DataTypes) {
       },
       {
         name: "unq_users_phone",
-        unique: true,
+        unique: false,
         using: "BTREE",
         fields: [
           { name: "user_phone" },

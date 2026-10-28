@@ -14,10 +14,23 @@ const createService = async function (request, response) {
 
     try {
         const data = request.body;
+        // verfier si le service existe deja 
+        if(data.service_slug){
+            if (await Service.findOne({where: {service_slug : data.service_slug}})) {
+                deleteMulterFile(request.file);
+                return apiResponse(response, "Le service que vous voulez cree existe deja ", 201);
+            }
+        } else {
+            if (await Service.findOne({where: {service_slug:  "@" + data.service_name.toLowerCase().replace(/\s+/g, "-")}})) {
+                deleteMulterFile(request.file);
+                return apiResponse(response, "Le service que vous voulez cree existe deja ", 201);
+            }
+        }
+
         const service = await Service.create({
             ...request.body,
             service_image: IS_TEST ? request.file.path : IS_DEV ? `/uploads/service/${request.file.filename}` : null,
-            service_slug: data.service_slug ? data.service_slug : "@" + data.service_name.toLowerCase().replace(/\s+/g, "-"),
+            service_slug: data.service_slug ? "@" + data.service_slug : "@" + data.service_name.toLowerCase().replace(/\s+/g, "-"),
         });
 
         return apiResponse(response, "Le service a ete cree avec success ! ", 200, service);

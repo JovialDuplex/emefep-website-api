@@ -3,10 +3,10 @@ import Sequelize from 'sequelize';
 export default function(sequelize, DataTypes) {
   return sequelize.define('projects', {
     id: {
-      autoIncrement: true,
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
     },
     project_name: {
       type: DataTypes.STRING(200),
@@ -39,7 +39,7 @@ export default function(sequelize, DataTypes) {
       unique: "unq_projects"
     },
     project_category: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
       references: {
         model: 'categories',
@@ -49,7 +49,7 @@ export default function(sequelize, DataTypes) {
   }, {
     sequelize,
     tableName: 'projects',
-    timestamps: false,
+    timestamps: true,
     indexes: [
       {
         name: "PRIMARY",
