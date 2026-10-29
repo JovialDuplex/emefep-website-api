@@ -6,7 +6,7 @@ const serviceRouter = Router();
 
 serviceRouter.post("/create", uploadFile.single("service_image"), serviceValidation, serviceController.createService);
 serviceRouter.get("/", serviceController.getService);
-serviceRouter.patch("/update", uploadFile.single("service_image"), serviceController.updateService);
+serviceRouter.patch("/update", uploadFile.single("service_image"), serviceValidation, serviceController.updateService);
 serviceRouter.delete("/delete", serviceController.deleteService);
 
 export default serviceRouter;
