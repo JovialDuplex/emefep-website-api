@@ -35,3 +35,5 @@ start().catch((err) => {
     console.error("Erreur fatale au demarrage :", err);
     process.exit(1);
 });
+
+export default app;
