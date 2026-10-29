@@ -18,7 +18,7 @@ const dbConnector = new Sequelize({
     username: IS_PROD ? process.env.DB_USERNAME : IS_TEST ? process.env.TEST_DB_USERNAME : process.env.LOCAL_DB_USERNAME,
     password: IS_PROD ? process.env.DB_PASSWORD : IS_TEST ? process.env.TEST_DB_PASSWORD : process.env.LOCAL_DB_PASSWORD,
     host: IS_PROD ? process.env.DB_HOST : IS_TEST ? process.env.TEST_DB_HOST : process.env.LOCAL_DB_HOST,
-    dialect: IS_PROD ? process.env.DB_DIALECT : IS_TEST ? process.env.TEST_DB_DIALECT : process.env.LOCAL_DB_DIALECT,
+    dialect: 'mysql',
     database: IS_PROD ? process.env.DB_NAME : IS_TEST ? process.env.TEST_DB_NAME : process.env.LOCAL_DB_NAME,
     port: IS_PROD ? process.env.DB_PORT : IS_TEST ? process.env.TEST_DB_PORT : process.env.LOCAL_DB_PORT,
     logging: false,
