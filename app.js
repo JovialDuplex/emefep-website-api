@@ -19,7 +19,7 @@ const start = async () => {
     configApp(app, express);
 
     // Ajout des routes de l'application
-    app.use("/api", mainRouter);
+    app.use("/", mainRouter);
 
     // Lancement du serveur HTTP
     app.listen(PORT, (error) => {
