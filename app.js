@@ -17,25 +17,19 @@ const start = async () => {
     await syncDB();
     configureApp();
 
-    if (!process.env.VERCEL) {
-      app.listen(PORT, (error) => {
-        if (error) {
-          console.log("erreur lors du lancement du serveur backend ");
-          throw error;
-        }
-        console.log("le serveur backend a demarre avec succes et ecoute sur le port : ", PORT);
-      });
-    }
+    app.listen(PORT, (error) => {
+      if (error) {
+        console.log("erreur lors du lancement du serveur backend ");
+        throw error;
+      }
+      console.log("le serveur backend a demarre avec succes et ecoute sur le port : ", PORT);
+    });
   } catch (error) {
     console.error("Erreur fatale au demarrage :", error);
     process.exit(1);
   }
 };
 
-if (!process.env.VERCEL) {
-  start();
-} else {
-  configureApp();
-}
+start();
 
 module.exports = app;
