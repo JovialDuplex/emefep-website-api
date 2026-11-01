@@ -14,7 +14,7 @@ const createServiceValidationSchema = joi.object({
         "string.empty": "La description du service est obligatoire",
         "string.max": "La description du service ne doit pas depasser 500 caracteres", 
         "any.required": "La description du service est obligatoire",
-    }),
+    }),             
     service_image: joi.object({
         size: joi.number().required().max(5*1024*1024).messages({
             "number.max": "le taille de l'image du service ne doit pas depasser 5Mo",

@@ -23,6 +23,20 @@ mainRouter.get("/", (request, response) => {
 });
 
 //donner tous les endpoints de l'api 
+/**
+ * @openapi 
+ * /api/endpoints:
+ *  get:
+ *      summary: retrieve a list of endpoints   
+ *      description: welcome to my api 
+ *      responses: 
+ *          200:
+ *              description: Return a mysterious string
+ *      parameters: 
+ *          - in: path
+ *            name: id
+ *            required: true  
+ */
 mainRouter.get("/endpoints", (request, response) => {
     response.json({
         endpoints: [{
