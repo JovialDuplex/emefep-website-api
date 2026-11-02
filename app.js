@@ -2,31 +2,9 @@ require("dotenv").config();
 const express = require("express");
 const { connectDB, syncDB, configApp } = require("./config/config");
 const mainRouter = require("./routes/index");
-const swaggerJSDoc = require("swagger-jsdoc");
-const swaggerUiExpress = require("swagger-ui-express");
 
 const PORT = process.env.PORT || 3000;
 const app = express();
-
-const swaggerOptions = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "welcome to my api",
-      version: "1.0.0",
-      description: "a simple api for emefep website",
-    },
-    servers: [
-      {
-        url: "http://localhost:3000",
-      },
-    ],
-  },
-  apis: ["./routes/*js", "./app.js"],
-};
-
-const swaggerSpec = swaggerJSDoc(swaggerOptions);
-app.use("/api-docs", swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerSpec));
 
 const configureApp = () => {
   configApp(app, express);
