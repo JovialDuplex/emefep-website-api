@@ -1,31 +1,26 @@
-import { dbConnector } from "../config/config.js";
-import { Sequelize } from "sequelize";
-import { deleteUploadedFile } from "../utils/deleteUploadedFile.js";
-import _categories from "./categories.js";
-import _company_infos from "./company_infos.js";
-import _company_stats from "./company_stats.js";
-import _members from "./members.js";
-import _product from "./product.js";
-import _projects from "./projects.js";
-import _service from "./service.js";
-import _users from "./users.js";
+const { dbConnector } = require("../config/config");
+const { Sequelize } = require("sequelize");
+const { deleteUploadedFile } = require("../utils/deleteUploadedFile");
+const categories = require("./categories");
+const company_infos = require("./company_infos");
+const company_stats = require("./company_stats");
+const members = require("./members");
+const product = require("./product");
+const projects = require("./projects");
+const service = require("./service");
+const users = require("./users");
 
-var DataTypes = Sequelize.DataTypes;
+const DataTypes = Sequelize.DataTypes;
 
-/**
- * Initialise les modeles de la base de donnee 
- * @param {Sequelize} sequelize 
- * @returns 
- */
 function initModels(sequelize) {
-  var Category = _categories(sequelize, DataTypes);
-  var CompanyInfo = _company_infos(sequelize, DataTypes);
-  var CompanyStat = _company_stats(sequelize, DataTypes);
-  var Member = _members(sequelize, DataTypes);
-  var Product = _product(sequelize, DataTypes);
-  var Project = _projects(sequelize, DataTypes);
-  var Service = _service(sequelize, DataTypes);
-  var User = _users(sequelize, DataTypes);
+  const Category = categories(sequelize, DataTypes);
+  const CompanyInfo = company_infos(sequelize, DataTypes);
+  const CompanyStat = company_stats(sequelize, DataTypes);
+  const Member = members(sequelize, DataTypes);
+  const Product = product(sequelize, DataTypes);
+  const Project = projects(sequelize, DataTypes);
+  const Service = service(sequelize, DataTypes);
+  const User = users(sequelize, DataTypes);
 
   Member.belongsTo(Category, { as: "member_category_category", foreignKey: "member_category" });
   Category.hasMany(Member, { as: "members", foreignKey: "member_category" });
@@ -36,23 +31,20 @@ function initModels(sequelize) {
   Service.belongsTo(Category, { as: "service_category_category", foreignKey: "service_category" });
   Category.hasMany(Service, { as: "services", foreignKey: "service_category" });
 
-  
-  Service.afterDestroy(async (service)=>{
-    await deleteUploadedFile(service.service_image);
+  Service.afterDestroy(async (serviceItem) => {
+    await deleteUploadedFile(serviceItem.service_image);
   });
-  
-  Service.beforeUpdate(async (service)=>{
-    if(service.changed("service_image")) {
-      await deleteUploadedFile(service._previousDataValues.service_image);
+
+  Service.beforeUpdate(async (serviceItem) => {
+    if (serviceItem.changed("service_image")) {
+      await deleteUploadedFile(serviceItem._previousDataValues.service_image);
     }
   });
 
-  //supprime l'image si un  membre est supprime
   Member.afterDestroy(async (member) => {
-    await deleteUploadedFile(member.member_image)
+    await deleteUploadedFile(member.member_image);
   });
 
-  // lorsqu'on met a jour un membre si le photo est changer on supprime l'ancien
   Member.beforeUpdate(async (member) => {
     if (member.changed("member_image")) {
       const oldImage = member._previousDataValues.member_image;
@@ -61,32 +53,24 @@ function initModels(sequelize) {
     }
   });
 
-  //supprime une image si la category est supprimer 
   Category.afterDestroy(async (category) => {
     await deleteUploadedFile(category.category_image_preview);
   });
 
-  //modifier le slug de la category avant de l'envoyer dans la base de donnee
   Category.beforeUpdate(async (category) => {
-    if (category.changed('category_name')) {
+    if (category.changed("category_name")) {
       console.log("l'image de la category a ete modifiee");
       category.category_slug = "@" + category.category_name.toLowerCase().replace(/\s+/g, "-");
     }
   });
 
-  // Si l'image de la category change, on supprime l'ANCIENNE image apres la mise a jour.
-  // On utilise _previousDataValues pour acceder a la valeur AVANT modification,
-  // car apres le save(), category_image_preview contient deja la nouvelle valeur.
   Category.afterUpdate(async (category) => {
-    if (category.changed('category_image_preview')) {
+    if (category.changed("category_image_preview")) {
       const oldImage = category._previousDataValues.category_image_preview;
       console.log(`[Hook afterUpdate] Suppression de l'ancienne image : ${oldImage}`);
       await deleteUploadedFile(oldImage);
     }
   });
-
-
-
 
   return {
     Category,
@@ -102,4 +86,24 @@ function initModels(sequelize) {
 
 const models = initModels(dbConnector);
 
-export const { Category, CompanyInfo, CompanyStat, Member, Product, Project, Service, User } = models;
+const {
+  Category,
+  CompanyInfo,
+  CompanyStat,
+  Member,
+  Product,
+  Project,
+  Service,
+  User,
+} = models;
+
+module.exports = {
+  Category,
+  CompanyInfo,
+  CompanyStat,
+  Member,
+  Product,
+  Project,
+  Service,
+  User,
+};

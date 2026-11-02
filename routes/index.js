@@ -1,62 +1,50 @@
-import { Router } from "express";
-import categoryRouter from "./categoryRoutes.js";
-import statRouter from "./statRoutes.js";
-import memberRouter from "./memberRoutes.js";
-import serviceRouter from "./serviceRoutes.js";
+const { Router } = require("express");
+const categoryRouter = require("./categoryRoutes");
+const statRouter = require("./statRoutes");
+const memberRouter = require("./memberRoutes");
+const serviceRouter = require("./serviceRoutes");
 
 const mainRouter = Router();
 
-//ajout des routes pour les categories a la route principale 
 mainRouter.use("/category", categoryRouter);
 mainRouter.use("/stat", statRouter);
 mainRouter.use("/member", memberRouter);
 mainRouter.use("/service", serviceRouter);
 
-//donne les informations sur l'api 
 mainRouter.get("/", (request, response) => {
-    response.json({
-        "api-name": "emefep-website-api",
-        "version": "1.0.0",
-        "description": "API pour le site web de l'EMEFEP",
-        "message": "welcome to emefep api"
-    })
+  response.json({
+    "api-name": "emefep-website-api",
+    version: "1.0.0",
+    description: "API pour le site web de l'EMEFEP",
+    message: "welcome to emefep api",
+  });
 });
 
-//donner tous les endpoints de l'api 
-/**
- * @openapi 
- * /api/endpoints:
- *  get:
- *      summary: retrieve a list of endpoints   
- *      description: welcome to my api 
- *      responses: 
- *          200:
- *              description: Return a mysterious string
- *      parameters: 
- *          - in: path
- *            name: id
- *            required: true  
- */
 mainRouter.get("/endpoints", (request, response) => {
-    response.json({
-        endpoints: [{
-            endpoint: "/api/category",
-            method: "GET",
-            description: "Recuperation des categories"
-        }, {
-            endpoint: "/api/category",
-            method: "POST",
-            description: "Creation d'une category"
-        }, {
-            endpoint: "/api/category",
-            method: "PUT",
-            description: "Mise a jour d'une category"
-        }, {
-            endpoint: "/api/category",
-            method: "DELETE",
-            description: "Recuperation des categories"
-        }]
-    })
+  response.json({
+    endpoints: [
+      {
+        endpoint: "/api/category",
+        method: "GET",
+        description: "Recuperation des categories",
+      },
+      {
+        endpoint: "/api/category",
+        method: "POST",
+        description: "Creation d'une category",
+      },
+      {
+        endpoint: "/api/category",
+        method: "PUT",
+        description: "Mise a jour d'une category",
+      },
+      {
+        endpoint: "/api/category",
+        method: "DELETE",
+        description: "Recuperation des categories",
+      },
+    ],
+  });
 });
 
-export default mainRouter;
+module.exports = mainRouter;

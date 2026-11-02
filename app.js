@@ -1,9 +1,9 @@
-import "dotenv/config";
-import express from "express";
-import { connectDB, syncDB, configApp } from "./config/config.js";
-import mainRouter from "./routes/index.js";
-import swaggerJSDoc from "swagger-jsdoc";
-import swaggerUiExpress from "swagger-ui-express";
+require("dotenv").config();
+const express = require("express");
+const { connectDB, syncDB, configApp } = require("./config/config");
+const mainRouter = require("./routes/index");
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUiExpress = require("swagger-ui-express");
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -18,11 +18,10 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "http://localhost:3000"
-      }
-    ]
+        url: "http://localhost:3000",
+      },
+    ],
   },
-
   apis: ["./routes/*js", "./app.js"],
 };
 
@@ -61,4 +60,4 @@ if (!process.env.VERCEL) {
   configureApp();
 }
 
-export default app;
+module.exports = app;

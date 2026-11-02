@@ -1,7 +1,5 @@
-import Sequelize from 'sequelize';
-
-export default function(sequelize, DataTypes) {
-  return sequelize.define('projects', {
+module.exports = function (sequelize, DataTypes) {
+  return sequelize.define("projects", {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -10,70 +8,50 @@ export default function(sequelize, DataTypes) {
     },
     project_name: {
       type: DataTypes.STRING(200),
-      allowNull: false
+      allowNull: false,
     },
     project_desc: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
     },
     project_client_name: {
       type: DataTypes.STRING(150),
-      allowNull: false
+      allowNull: false,
     },
     project_demo_url: {
       type: DataTypes.STRING(500),
-      allowNull: true
+      allowNull: true,
     },
     project_start_date: {
       type: DataTypes.DATEONLY,
-      allowNull: false
+      allowNull: false,
     },
     project_end_date: {
       type: DataTypes.DATEONLY,
       allowNull: true,
-      comment: "NULL = projet en cours"
+      comment: "NULL = projet en cours",
     },
     project_slug: {
       type: DataTypes.STRING(100),
       allowNull: false,
-      unique: "unq_projects"
+      unique: "unq_projects",
     },
     project_category: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: 'categories',
-        key: 'id'
-      }
-    }
+        model: "categories",
+        key: "id",
+      },
+    },
   }, {
     sequelize,
-    tableName: 'projects',
+    tableName: "projects",
     timestamps: true,
     indexes: [
-      {
-        name: "PRIMARY",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "id" },
-        ]
-      },
-      {
-        name: "unq_projects",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "project_slug" },
-        ]
-      },
-      {
-        name: "fk_projects_categories",
-        using: "BTREE",
-        fields: [
-          { name: "project_category" },
-        ]
-      },
-    ]
+      { name: "PRIMARY", unique: true, using: "BTREE", fields: [{ name: "id" }] },
+      { name: "unq_projects", unique: true, using: "BTREE", fields: [{ name: "project_slug" }] },
+      { name: "fk_projects_categories", using: "BTREE", fields: [{ name: "project_category" }] },
+    ],
   });
 };

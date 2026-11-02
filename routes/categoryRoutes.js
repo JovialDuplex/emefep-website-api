@@ -1,7 +1,7 @@
-import { Router } from "express";
-import categoryController from "../controllers/categoryController.js";
-import categoryValidator from "../middlewares/categoryValidation.js";
-import { uploadFile } from "../config/config.js";
+const { Router } = require("express");
+const categoryController = require("../controllers/categoryController");
+const categoryValidator = require("../middlewares/categoryValidation");
+const { uploadFile } = require("../config/config");
 
 const categoryRouter = Router();
 
@@ -10,4 +10,4 @@ categoryRouter.post("/create", uploadFile.single("category_image_preview"), cate
 categoryRouter.patch("/update", uploadFile.single("category_image_preview"), categoryController.updateCategory);
 categoryRouter.delete("/delete", categoryController.deleteCategory);
 
-export default categoryRouter;
+module.exports = categoryRouter;

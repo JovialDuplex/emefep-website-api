@@ -1,80 +1,57 @@
-import Sequelize from 'sequelize';
-
-export default function(sequelize, DataTypes) {
-  return sequelize.define('product', {
+module.exports = function (sequelize, DataTypes) {
+  return sequelize.define("product", {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       primaryKey: true,
-      comment: "identifiant unique a chaque produit"
+      comment: "identifiant unique a chaque produit",
     },
     product_name: {
       type: DataTypes.STRING(200),
       allowNull: false,
-      comment: "nom du produit"
+      comment: "nom du produit",
     },
     product_price: {
-      type: DataTypes.DECIMAL(12,2),
+      type: DataTypes.DECIMAL(12, 2),
       allowNull: false,
-      defaultValue: 5000.00,
-      comment: "prix du produit"
+      defaultValue: 5000.0,
+      comment: "prix du produit",
     },
     product_desc: {
       type: DataTypes.STRING(500),
       allowNull: false,
-      comment: "description du produit"
+      comment: "description du produit",
     },
     product_category: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: 'categories',
-        key: 'id'
-      }
+        model: "categories",
+        key: "id",
+      },
     },
     product_details: {
       type: DataTypes.TEXT,
-      allowNull: true
+      allowNull: true,
     },
     product_slug: {
       type: DataTypes.STRING(100),
       allowNull: false,
-      unique: "unq_product"
+      unique: "unq_product",
     },
     product_image: {
       type: DataTypes.STRING(500),
-      allowNull: false
+      allowNull: false,
     },
-
   }, {
     sequelize,
-    tableName: 'product',
+    tableName: "product",
     timestamps: false,
     indexes: [
-      {
-        name: "PRIMARY",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "id" },
-        ]
-      },
-      {
-        name: "unq_product",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "product_slug" },
-        ]
-      },
-      {
-        name: "fk_product_categories",
-        using: "BTREE",
-        fields: [
-          { name: "product_category" },
-        ]
-      },
-    ]
+      { name: "PRIMARY", unique: true, using: "BTREE", fields: [{ name: "id" }] },
+      { name: "unq_product", unique: true, using: "BTREE", fields: [{ name: "product_slug" }] },
+      { name: "fk_product_categories", using: "BTREE", fields: [{ name: "product_category" }] },
+    ],
   });
 };

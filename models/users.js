@@ -1,7 +1,5 @@
-import Sequelize from 'sequelize';
-
-export default function(sequelize, DataTypes) {
-  return sequelize.define('users', {
+module.exports = function (sequelize, DataTypes) {
+  return sequelize.define("users", {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -10,74 +8,46 @@ export default function(sequelize, DataTypes) {
     },
     user_full_name: {
       type: DataTypes.STRING(200),
-      allowNull: false
+      allowNull: false,
     },
     user_phone: {
       type: DataTypes.STRING(30),
       allowNull: true,
-      unique: "unq_users_phone"
+      unique: "unq_users_phone",
     },
     user_image: {
       type: DataTypes.STRING(500),
-      allowNull: true
+      allowNull: true,
     },
     user_email: {
       type: DataTypes.STRING(150),
       allowNull: false,
-      unique: "unq_users_email"
+      unique: "unq_users_email",
     },
     user_role: {
-      type: DataTypes.ENUM('admin','client'),
+      type: DataTypes.ENUM("admin", "client"),
       allowNull: false,
-      defaultValue: "client"
+      defaultValue: "client",
     },
     user_firebase_uid: {
       type: DataTypes.STRING(128),
       allowNull: false,
-      unique: "unq_users_firebase_uid"
+      unique: "unq_users_firebase_uid",
     },
     user_auth_provider: {
-      type: DataTypes.ENUM('google','facebook','github','password'),
+      type: DataTypes.ENUM("google", "facebook", "github", "password"),
       allowNull: false,
-      defaultValue: "password"
-    }
+      defaultValue: "password",
+    },
   }, {
     sequelize,
-    tableName: 'users',
+    tableName: "users",
     timestamps: true,
     indexes: [
-      {
-        name: "PRIMARY",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "id" },
-        ]
-      },
-      {
-        name: "unq_users_email",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "user_email" },
-        ]
-      },
-      {
-        name: "unq_users_firebase_uid",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "user_firebase_uid" },
-        ]
-      },
-      {
-        name: "unq_users_phone",
-        unique: false,
-        using: "BTREE",
-        fields: [
-          { name: "user_phone" },
-        ]
-      },
-    ]
+      { name: "PRIMARY", unique: true, using: "BTREE", fields: [{ name: "id" }] },
+      { name: "unq_users_email", unique: true, using: "BTREE", fields: [{ name: "user_email" }] },
+      { name: "unq_users_firebase_uid", unique: true, using: "BTREE", fields: [{ name: "user_firebase_uid" }] },
+      { name: "unq_users_phone", unique: false, using: "BTREE", fields: [{ name: "user_phone" }] },
+    ],
   });
 };

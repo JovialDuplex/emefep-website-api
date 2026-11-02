@@ -1,6 +1,6 @@
-import { Router } from "express";
-import statController from "../controllers/statController.js";
-import statValidation from "../middlewares/statValidation.js";
+const { Router } = require("express");
+const statController = require("../controllers/statController");
+const statValidation = require("../middlewares/statValidation");
 
 const statRouter = Router();
 
@@ -9,4 +9,4 @@ statRouter.get("/", statController.getAllStat);
 statRouter.patch("/update", statValidation.updateStatValidate, statController.updateStat);
 statRouter.delete("/delete", statController.deleteStat);
 
-export default statRouter;
+module.exports = statRouter;
