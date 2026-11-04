@@ -25,8 +25,7 @@ const dbConnector = new Sequelize({
     : IS_TEST
       ? process.env.TEST_DB_HOST
       : process.env.LOCAL_DB_HOST,
-  dialect: "mysql",
-  dialectModule: mysql2,
+
   database: IS_PROD
     ? process.env.DB_NAME
     : IS_TEST
@@ -38,6 +37,7 @@ const dbConnector = new Sequelize({
       ? process.env.TEST_DB_PORT
       : process.env.LOCAL_DB_PORT,
   logging: false,
+  dialect: "mysql",
   dialectOptions: IS_TEST
     ? {
         ssl: {
