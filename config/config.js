@@ -60,7 +60,13 @@ const connectDB = async function () {
       console.log("connexion a la base de LOCAL reussit ");
     }
   } catch (error) {
-    console.log("erreur lors de la connexion a la base de donnee ", error);
+    if (IS_TEST) {
+      console.log("Erreur lors connexion a la base de TEST ", error);
+    } else if (IS_PROD) {
+      console.log("Erreur connexion a la base de PRODUCTION  ", error);
+    } else {
+      console.log("Erreur connexion a la base de LOCAL ", error);
+    };
     throw error;
   }
 };
