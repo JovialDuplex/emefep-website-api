@@ -3,6 +3,7 @@ const categoryRouter = require("./categoryRoutes");
 const statRouter = require("./statRoutes");
 const memberRouter = require("./memberRoutes");
 const serviceRouter = require("./serviceRoutes");
+const userRouter = require("./userRoutes");
 
 const mainRouter = Router();
 
@@ -10,7 +11,7 @@ mainRouter.use("/category", categoryRouter);
 mainRouter.use("/stat", statRouter);
 mainRouter.use("/member", memberRouter);
 mainRouter.use("/service", serviceRouter);
-
+mainRouter.use("/user", userRouter)
 mainRouter.get("/", (request, response) => {
   response.json({
     "api-name": "emefep-website-api",
