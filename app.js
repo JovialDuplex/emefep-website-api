@@ -1,5 +1,7 @@
 require("dotenv").config();
 const express = require("express");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./config/swagger");
 const { connectDB, syncDB, configApp } = require("./config/config");
 const mainRouter = require("./routes/index");
 
@@ -8,6 +10,7 @@ const app = express();
 
 const configureApp = () => {
   configApp(app, express);
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
   app.use("/", mainRouter);
 };
 
