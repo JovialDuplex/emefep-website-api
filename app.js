@@ -14,11 +14,27 @@ const configureApp = () => {
   app.use("/", mainRouter);
 };
 
+// Initialise la base et les routes une seule fois (reutilise entre les requetes
+// d'une meme instance serverless).
+let initPromise = null;
+const initApp = () => {
+  if (!initPromise) {
+    initPromise = (async () => {
+      await connectDB();
+      await syncDB();
+      configureApp();
+      return app;
+    })().catch((error) => {
+      initPromise = null;
+      throw error;
+    });
+  }
+  return initPromise;
+};
+
 const start = async () => {
   try {
-    await connectDB();
-    await syncDB();
-    configureApp();
+    await initApp();
 
     app.listen(PORT, (error) => {
       if (error) {
@@ -33,6 +49,11 @@ const start = async () => {
   }
 };
 
-start();
+// Demarre un serveur HTTP uniquement quand le fichier est lance directement
+// (`node app.js` / `npm start`). Sur Netlify, l'app est servie par une fonction.
+if (require.main === module) {
+  start();
+}
 
 module.exports = app;
+module.exports.initApp = initApp;

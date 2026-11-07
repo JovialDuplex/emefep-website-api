@@ -38,6 +38,7 @@ const dbConnector = new Sequelize({
       : process.env.LOCAL_DB_PORT,
   logging: false,
   dialect: "mysql",
+  dialectModule: mysql2,
   dialectOptions: IS_TEST
     ? {
         ssl: {

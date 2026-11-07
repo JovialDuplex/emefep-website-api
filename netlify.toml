@@ -1,0 +1,14 @@
+[build]
+  publish = "netlify/static"
+
+[functions]
+  node_bundler = "zisi"
+  # swagger-jsdoc lit les annotations @openapi des routes a l'execution
+  included_files = ["routes/**"]
+
+# Toutes les requetes sont envoyees a l'API Express
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true
