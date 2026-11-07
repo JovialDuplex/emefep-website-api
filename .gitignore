@@ -2,3 +2,5 @@
 .env
 /public
 .openpost
+# Local Netlify folder
+.netlify
