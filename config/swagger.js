@@ -10,12 +10,8 @@ const options = {
     },
     servers: [
       {
-        url: "https://emefep-website-api.vercel.app",
-        description: "Serveur de production",
-      },
-      {
-        url: "http://localhost:3000",
-        description: "Serveur local",
+        url: "/",
+        description: "Serveur courant (Netlify ou local)",
       },
     ],
     tags: [
